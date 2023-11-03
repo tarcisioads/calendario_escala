@@ -7,8 +7,9 @@ onMounted(() => {
 })
 
 const currentDate = new Date();
+const showDate = ref(currentDate);
 const currentYear = ref(currentDate.getFullYear());
-const currentMonth = ref(currentDate.getMonth());
+const currentMonth = ref(currentDate.getMonth()+1);
 
 const props = defineProps(['data'])
 const data = toRef(props, 'data');
@@ -33,19 +34,35 @@ const MONTHS_NAMES = ref([
   "Novembro",
   "Dezembro"
 ]);
-const DAYS = ref(['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sabado']);
+const DAYS = ref(['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']);
 
 const no_of_days = ref([])
 const blankdays = ref([])
 
 
 function loadCalendar(){
-  let daysInMonth = new Date(currentYear.value, currentMonth.value, 0).getDate();
-  console.log(daysInMonth)
+  let daysInMonth = new Date(currentYear.value, currentMonth.value-1, 0).getDate();
+  const names = [...new Set(events.map(element => element.name))]
+  const namesObj = []
+  let theme = 1
+  names.forEach(element => {
+    namesObj.push({name: element, theme: theme})
+    theme++
+    if (theme >= 15){
+      theme = 1
+    }
+  })
+  events.forEach(element => {
+    const obj = namesObj.filter(value => 
+      value.name === element.name    
+    ).shift()
+    element.theme = obj.theme
+  }); 
+ 
 
   // find where to start calendar day of week
-  let dayOfWeek = new Date(currentYear.value, currentMonth.value).getDay();
-  console.log(dayOfWeek)
+  showDate.value = new Date(currentYear.value, currentMonth.value-1) 
+  let dayOfWeek = new Date(currentYear.value, currentMonth.value-1).getDay();
   let blankdaysArray = [];
   for ( var i=1; i <= dayOfWeek; i++) {
     blankdaysArray.push(i);
@@ -53,11 +70,10 @@ function loadCalendar(){
 
   let daysArray = [];
   for ( var i=1; i <= daysInMonth; i++) {
-    const rndInt = randomIntFromInterval(1, 5)
     let list = [];
     events.forEach(element => {
       if (element.day == i){
-        list.push({event_title: element.name, event_theme: rndInt})
+        list.push({event_title: element.name, event_theme: element.theme})
       }
     }); 
     daysArray.push({day:i, events: list});
@@ -67,9 +83,6 @@ function loadCalendar(){
   no_of_days.value = daysArray;
 }
 
-function randomIntFromInterval(min, max) { // min and max included 
-  return Math.floor(Math.random() * (max - min + 1) + min)
-}
 
 function mountObject(){
   let lines = data.value.split("\n");
@@ -78,14 +91,21 @@ function mountObject(){
   for(var i=0;i<lines.length;i++){
     let [dayMonth, nome] = lines[i].split("-").map((str) => str.trim());
     let [day, month, year] = dayMonth.split("/").map((str) => str.trim());
-    if (!month){
-      month = currentDate.getMonth();
-    }
-    if (!year){
-      year = currentDate.getFullYear();
-    }
     day = Number(day);
+    if (!month){
+      month = currentDate.getMonth()+1;
+    }
     month = parseInt(month);
+    if (!year){
+      if (month < (currentDate.getMonth()+1)){
+        year = currentDate.getFullYear()+1;
+      }else{
+        year = currentDate.getFullYear();
+      }
+    }
+    if (year.toString().length == 2){
+      year = currentDate.getFullYear().toString().substring(0,2) + year
+    }
     year = parseInt(year);
     currentMonth.value = month
     currentYear.value = year
@@ -95,7 +115,7 @@ function mountObject(){
     result.push(obj);
   }
 
-  return result; //JavaScript object
+  return result; 
 }
 
 </script>
@@ -103,12 +123,10 @@ function mountObject(){
 
 <template>
   <div class="bg-white rounded-lg shadow overflow-hidden">
-    {{ data }}
     <div class="flex items-center justify-between py-2 px-6">
       <div>
         <span class="text-lg font-bold text-gray-800">{{MONTHS_NAMES[currentMonth-1]}}</span>
         <span class="ml-1 text-lg text-gray-600 font-normal">{{currentYear}}</span>
-        {{currentMonth}}
       </div>
     </div>	
 
@@ -125,11 +143,11 @@ function mountObject(){
           style="width: 14.28%; height: 120px"
           class="text-center border-r border-b px-4 pt-2"	
         ></div>
-          <div v-for="(date, dateIndex) in no_of_days" style="width: 14.28%; height: 120px" class="px-4 pt-2 border-r border-b relative">
+          <div v-for="(date, dateIndex) in no_of_days" style="width: 14.28%; min-height: 120px" class="px-4 pt-2 border-r border-b relative">
             <div
               class="inline-flex w-6 h-6 items-center justify-center cursor-pointer text-center leading-none rounded-full transition ease-in-out duration-100 text-gray-700 hover:bg-blue-200"
               >{{date.day}}</div>
-            <div style="height: 80px;" class="overflow-y-auto mt-1">
+            <div style="min-height: 80px;" class="overflow-y-auto mt-1">
 
               <div v-for="event in date.events">
                 <div
@@ -139,7 +157,14 @@ function mountObject(){
                     'border-red-200 text-red-800 bg-red-100': event.event_theme === 2,
                     'border-yellow-200 text-yellow-800 bg-yellow-100': event.event_theme === 3,
                     'border-green-200 text-green-800 bg-green-100': event.event_theme === 4,
-                    'border-purple-200 text-purple-800 bg-purple-100': event.event_theme === 5
+                    'border-purple-200 text-purple-800 bg-purple-100': event.event_theme === 5,
+                    'border-orange-200 text-orange-800 bg-orange-100': event.event_theme === 6,
+                    'border-lime-200 text-lime-800 bg-lime-100': event.event_theme === 7,
+                    'border-cyan-200 text-cyan-800 bg-cyan-100': event.event_theme === 8,
+                    'border-violet-200 text-violet-800 bg-violet-100': event.event_theme === 9,
+                    'border-fuchsia-200 text-fuchsia-800 bg-fuchsia-100': event.event_theme === 10,
+                    'border-pink-200 text-pink-800 bg-pink-100': event.event_theme === 11,
+                    'border-rose-200 text-rose-800 bg-rose-100': event.event_theme === 12,
                   }"
                 >
                 <p class="text-sm truncate leading-tight">{{event.event_title}}</p>
