@@ -2,7 +2,9 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss'],
+  ssr: false,
   app: {
+    baseURL: '/calendario_escala/',
     head: {
       script: [
         {
