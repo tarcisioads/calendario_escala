@@ -5,6 +5,7 @@ export default defineNuxtConfig({
   ssr: false,
   app: {
     baseURL: '/calendario_escala/',
+    buildAssetsDir: 'assets', 
     head: {
       script: [
         {

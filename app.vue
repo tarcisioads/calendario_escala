@@ -6,10 +6,10 @@ useSeoMeta({
   description: 'App para exibir escala no calendario.'
 })
 
-const data = ref('02 - Paula Cristina\n02 - Aline\n02 - Tarcísio Ads\n02 - Roberta\n02 - Gaby\n05 - Aline\n09 - Tarcísio\n12 - Paula\n16 - Aline\n19 - Paula\n23 - Tarcísio\n26 - Gaby\n30 -  Aline');
+// const data = ref('02 - Paula Cristina\n02 - Aline\n02 - Tarcísio Ads\n02 - Roberta\n02 - Gaby\n05 - Aline\n09 - Tarcísio\n12 - Paula\n16 - Aline\n19 - Paula\n23 - Tarcísio\n26 - Gaby\n30 -  Aline');
+const data = ref('');
 
 function handleChange(value) {
-  console.log(value)
   data.value = value
 }
 
