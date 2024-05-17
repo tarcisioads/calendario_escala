@@ -127,15 +127,15 @@ function mountObject() {
 
     <div class="flex items-center justify-between py-2 px-6">
       <div>
-        <span class="text-lg font-bold text-gray-800">{{ MONTHS_NAMES[currentMonth - 1] }}</span>
-        <span class="ml-1 text-lg text-gray-600 font-normal">{{ currentYear }}</span>
+        <span class="text-2xl font-bold text-gray-800">{{ MONTHS_NAMES[currentMonth - 1] }}</span>
+        <span class="ml-1 text-2xl text-gray-600 font-normal">{{ currentYear }}</span>
       </div>
     </div>
 
     <div class="-mx-1 -mb-1">
       <div class="flex flex-wrap">
         <div v-for="day in DAYS" style="width: 14.26%" class="px-2 py-2 border-t">
-          <div class="text-gray-600 text-sm uppercase tracking-wide font-bold text-center">{{ day }}</div>
+          <div class="text-2xl text-gray-600 text-sm uppercase tracking-wide font-bold text-center">{{ day }}</div>
         </div>
       </div>
 
@@ -145,7 +145,7 @@ function mountObject() {
         <div v-for="(date, dateIndex) in no_of_days" style="width: 14.28%;"
           class="px-4 pt-2 border-r border-b relative">
           <div
-            class="inline-flex w-6 h-6 items-center justify-center cursor-pointer text-center leading-none rounded-full transition ease-in-out duration-100 text-gray-700 hover:bg-blue-200">
+            class="inline-flex text-2xl w-6 h-6 items-center justify-center cursor-pointer text-center leading-none rounded-full transition ease-in-out duration-100 text-gray-700 hover:bg-blue-200">
             {{ date.day }}</div>
           <div style="min-height: 120px;" class="overflow-y-auto mt-1 flex flex-col flex-wrap">
 
@@ -168,7 +168,7 @@ function mountObject() {
                 'border-teal-200 text-teal-800 bg-teal-100': event.event_theme === 15,
               }">
                 <!-- <p class="grow text-md truncate leading-tight">{{ event.event_title }}</p> -->
-                <p class="">{{ event.event_title }}</p>
+                <p class="text-2xl">{{ event.event_title }}</p>
               </div>
             </div>
           </div>
